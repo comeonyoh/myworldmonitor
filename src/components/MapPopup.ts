@@ -1,4 +1,4 @@
-import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat } from '@/types';
+import type { ConflictZone, Hotspot, NewsItem, MilitaryBase, StrategicWaterway, APTGroup, NuclearFacility, EconomicCenter, GammaIrradiator, Pipeline, UnderseaCable, CableAdvisory, RepairShip, InternetOutage, AIDataCenter, AisDisruptionEvent, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, Port, Spaceport, CriticalMineralProject, CyberThreat, SportsEvent, SportsEventCluster } from '@/types';
 import type { TradeRouteSegment } from '@/config/trade-routes';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { Earthquake } from '@/services/earthquakes';
@@ -86,7 +86,7 @@ function fmtDelayMin(min: number | undefined): string {
   return `<span style="color:${min > 0 ? '#f97316' : '#22c55e'};font-size:10px;margin-left:3px">${min > 0 ? '+' : ''}${min}m</span>`;
 }
 
-export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
+export type PopupType = 'conflict' | 'hotspot' | 'earthquake' | 'weather' | 'base' | 'waterway' | 'apt' | 'cyberThreat' | 'nuclear' | 'economic' | 'irradiator' | 'pipeline' | 'cable' | 'cable-advisory' | 'repair-ship' | 'outage' | 'datacenter' | 'datacenterCluster' | 'ais' | 'protest' | 'protestCluster' | 'flight' | 'aircraft' | 'militaryFlight' | 'militaryVessel' | 'militaryFlightCluster' | 'militaryVesselCluster' | 'natEvent' | 'port' | 'spaceport' | 'mineral' | 'startupHub' | 'cloudRegion' | 'techHQ' | 'accelerator' | 'techEvent' | 'techHQCluster' | 'techEventCluster' | 'sportsEvent' | 'sportsEventCluster' | 'techActivity' | 'geoActivity' | 'stockExchange' | 'financialCenter' | 'centralBank' | 'commodityHub' | 'iranEvent' | 'gpsJamming' | 'radiation';
 
 interface TechEventPopupData {
   id: string;
@@ -215,7 +215,7 @@ interface DatacenterClusterData {
 
 interface PopupData {
   type: PopupType;
-  data: ConflictZone | Hotspot | Earthquake | WeatherAlert | MilitaryBase | StrategicWaterway | APTGroup | CyberThreat | NuclearFacility | EconomicCenter | GammaIrradiator | Pipeline | UnderseaCable | CableAdvisory | RepairShip | InternetOutage | AIDataCenter | AisDisruptionEvent | SocialUnrestEvent | AirportDelayAlert | PositionSample | MilitaryFlight | MilitaryVessel | MilitaryFlightCluster | MilitaryVesselCluster | NaturalEvent | Port | Spaceport | CriticalMineralProject | StartupHub | CloudRegion | TechHQ | Accelerator | TechEventPopupData | TechHQClusterData | TechEventClusterData | ProtestClusterData | DatacenterClusterData | TechHubActivity | GeoHubActivity | StockExchangePopupData | FinancialCenterPopupData | CentralBankPopupData | CommodityHubPopupData | IranEventPopupData | GpsJammingPopupData | RadiationObservation;
+  data: ConflictZone | Hotspot | Earthquake | WeatherAlert | MilitaryBase | StrategicWaterway | APTGroup | CyberThreat | NuclearFacility | EconomicCenter | GammaIrradiator | Pipeline | UnderseaCable | CableAdvisory | RepairShip | InternetOutage | AIDataCenter | AisDisruptionEvent | SocialUnrestEvent | AirportDelayAlert | PositionSample | MilitaryFlight | MilitaryVessel | MilitaryFlightCluster | MilitaryVesselCluster | NaturalEvent | Port | Spaceport | CriticalMineralProject | StartupHub | CloudRegion | TechHQ | Accelerator | TechEventPopupData | TechHQClusterData | TechEventClusterData | SportsEvent | SportsEventCluster | ProtestClusterData | DatacenterClusterData | TechHubActivity | GeoHubActivity | StockExchangePopupData | FinancialCenterPopupData | CentralBankPopupData | CommodityHubPopupData | IranEventPopupData | GpsJammingPopupData | RadiationObservation;
   relatedNews?: NewsItem[];
   x: number;
   y: number;
@@ -706,6 +706,10 @@ export class MapPopup {
         return this.renderTechHQClusterPopup(data.data as TechHQClusterData);
       case 'techEventCluster':
         return this.renderTechEventClusterPopup(data.data as TechEventClusterData);
+      case 'sportsEvent':
+        return this.renderSportsEventPopup(data.data as SportsEvent);
+      case 'sportsEventCluster':
+        return this.renderSportsEventClusterPopup(data.data as SportsEventCluster);
       case 'stockExchange':
         return this.renderStockExchangePopup(data.data as StockExchangePopupData);
       case 'financialCenter':
@@ -2556,6 +2560,55 @@ ${isFeatureAvailable('wingbitsEnrichment') ? '<div class="wingbits-live-section"
           ${t('popups.techEvent.moreInformation')} →
         </a>
         ` : ''}
+      </div>
+    `;
+  }
+
+  private renderSportsEventPopup(event: SportsEvent): string {
+    const score = event.homeScore != null && event.awayScore != null
+      ? `${event.homeScore} – ${event.awayScore}`
+      : new Date(event.startTime).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    const location = [event.venue, event.city, event.country].filter(Boolean).join(', ');
+    const status = event.status.toUpperCase();
+    const detail = [event.period, event.clock].filter(Boolean).join(' · ');
+    const approximate = event.coordinateAccuracy === 'approximate' || event.coordinateAccuracy === 'unknown';
+    return `
+      <div class="popup-header sports-event ${escapeHtml(event.status)}">
+        <span class="popup-title">🏆 ${escapeHtml(event.league)}</span>
+        <span class="popup-badge">${escapeHtml(status)}</span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-subtitle">${escapeHtml(event.homeTeam)} vs ${escapeHtml(event.awayTeam)}</div>
+        <div class="popup-stats">
+          <div class="popup-stat"><span class="stat-label">Score / time</span><span class="stat-value">${escapeHtml(score)}</span></div>
+          ${detail ? `<div class="popup-stat"><span class="stat-label">Game</span><span class="stat-value">${escapeHtml(detail)}</span></div>` : ''}
+          ${location ? `<div class="popup-stat"><span class="stat-label">Location</span><span class="stat-value">${escapeHtml(location)}${approximate ? ' (approx.)' : ''}</span></div>` : ''}
+        </div>
+        <div class="popup-source">Demo · Free v1 data: <a href="https://www.thesportsdb.com/" target="_blank" rel="noopener noreferrer">TheSportsDB</a></div>
+      </div>
+    `;
+  }
+
+  private renderSportsEventClusterPopup(cluster: SportsEventCluster): string {
+    const items = cluster.events.map(event => {
+      const score = event.homeScore != null && event.awayScore != null
+        ? ` ${event.homeScore}–${event.awayScore}`
+        : ` ${new Date(event.startTime).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+      return `<li class="cluster-item">${escapeHtml(event.league)} · ${escapeHtml(event.homeTeam)} vs ${escapeHtml(event.awayTeam)}${escapeHtml(score)}</li>`;
+    }).join('');
+    const location = [cluster.city, cluster.country].filter(Boolean).join(', ');
+    const approximate = cluster.events.some(event => event.coordinateAccuracy !== 'exact');
+    return `
+      <div class="popup-header sports-event cluster">
+        <span class="popup-title">🏆 ${escapeHtml(location || 'Sports Events')}</span>
+        <span class="popup-badge">${cluster.count} events</span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-body cluster-popup">
+        ${approximate ? '<div class="popup-subtitle">📍 Approximate location</div>' : ''}
+        <ul class="cluster-list">${items}</ul>
+        <div class="popup-source">Demo · Free v1 data: <a href="https://www.thesportsdb.com/" target="_blank" rel="noopener noreferrer">TheSportsDB</a></div>
       </div>
     `;
   }

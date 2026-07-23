@@ -18160,6 +18160,95 @@ paths:
                                 oneOf:
                                     - $ref: '#/components/schemas/Error'
                                     - $ref: '#/components/schemas/GatewayError'
+    /api/sports/v1/list-sports-events:
+        get:
+            tags:
+                - SportsService
+            summary: ListSportsEvents
+            operationId: ListSportsEvents
+            parameters:
+                - name: jmespath
+                  in: query
+                  description: |-
+                    Optional JMESPath expression applied server-side to project or reduce the JSON response before it is returned (mirrors the MCP jmespath argument). Invalid expressions, expressions larger than 1024 UTF-8 bytes, or projections that exceed the 256 KB output cap return HTTP 400 with a {_jmespath_error, original_keys} envelope. Grammar and worked examples: https://www.worldmonitor.app/docs/mcp-jmespath.
+                  required: false
+                  example: "keys(@)"
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json:
+                            example:
+                                "configured": true
+                                "degraded": true
+                                "error": "example"
+                                "events":
+                                    - "awayScore": 42
+                                      "awayTeam":
+                                          "id": "example-id"
+                                          "logoUrl": "https://example.com/worldmonitor"
+                                          "name": "WorldMonitor Analyst"
+                                      "city": "example"
+                                      "clock": "example"
+                                      "coordinateAccuracy": "example"
+                                "fetchedAt": "2026-01-15T12:00:00Z"
+                            schema:
+                                $ref: '#/components/schemas/worldmonitor_sports_v1_ListSportsEventsResponse'
+                "400":
+                    description: Validation error
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - $ref: '#/components/schemas/ValidationError'
+                                    - $ref: '#/components/schemas/JmespathProjectionError'
+                "401":
+                    description: Missing or invalid API key.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UnauthorizedError'
+                "403":
+                    description: API access requires an active subscription (the API key's subscription is inactive or expired).
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ForbiddenError'
+                "429":
+                    description: Rate limit exceeded.
+                    headers:
+                        X-RateLimit-Limit:
+                            description: Maximum requests allowed in the active rate-limit window.
+                            schema:
+                                type: string
+                        X-RateLimit-Remaining:
+                            description: Requests remaining in the active rate-limit window.
+                            schema:
+                                type: string
+                        X-RateLimit-Reset:
+                            description: Unix epoch milliseconds when the active rate-limit window resets.
+                            schema:
+                                type: string
+                        Retry-After:
+                            description: Seconds to wait before retrying the request.
+                            schema:
+                                type: string
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - $ref: '#/components/schemas/Error'
+                                    - $ref: '#/components/schemas/RateLimitError'
+                default:
+                    description: Gateway or handler error response.
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - $ref: '#/components/schemas/Error'
+                                    - $ref: '#/components/schemas/GatewayError'
     /api/supply-chain/v1/get-shipping-rates:
         get:
             tags:
@@ -34829,6 +34918,105 @@ components:
             description: |-
                 Single webhook record in the list response. `secret` is intentionally
                  omitted; use rotate-secret to obtain a new one.
+        worldmonitor_sports_v1_ListSportsEventsRequest:
+            type: object
+            description: |-
+                ListSportsEventsRequest is intentionally empty. The server owns the fixed
+                 worldwide league allowlist and returns a compact dashboard snapshot.
+        worldmonitor_sports_v1_ListSportsEventsResponse:
+            type: object
+            properties:
+                events:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/worldmonitor_sports_v1_SportsEvent'
+                fetchedAt:
+                    type: string
+                configured:
+                    type: boolean
+                leagueStatuses:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/worldmonitor_sports_v1_SportsLeagueSourceStatus'
+                degraded:
+                    type: boolean
+                stale:
+                    type: boolean
+                error:
+                    type: string
+        worldmonitor_sports_v1_SportsEvent:
+            type: object
+            properties:
+                id:
+                    type: string
+                sport:
+                    type: string
+                leagueId:
+                    type: string
+                league:
+                    type: string
+                status:
+                    type: string
+                    description: One of "scheduled", "live", "final", "postponed", or "cancelled".
+                startTime:
+                    type: string
+                    description: UTC ISO-8601 timestamp.
+                homeTeam:
+                    $ref: '#/components/schemas/worldmonitor_sports_v1_SportsTeam'
+                awayTeam:
+                    $ref: '#/components/schemas/worldmonitor_sports_v1_SportsTeam'
+                homeScore:
+                    type: integer
+                    format: int32
+                awayScore:
+                    type: integer
+                    format: int32
+                period:
+                    type: string
+                clock:
+                    type: string
+                venue:
+                    type: string
+                city:
+                    type: string
+                country:
+                    type: string
+                latitude:
+                    type: number
+                    format: double
+                longitude:
+                    type: number
+                    format: double
+                coordinateAccuracy:
+                    type: string
+                    description: '"exact", "approximate", or empty when the event is not mappable.'
+                updatedAt:
+                    type: string
+            description: SportsEvent is a normalized event from TheSportsDB.
+        worldmonitor_sports_v1_SportsTeam:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                logoUrl:
+                    type: string
+            description: SportsTeam is a lightweight team reference suitable for live-score cards.
+        worldmonitor_sports_v1_SportsLeagueSourceStatus:
+            type: object
+            properties:
+                league:
+                    type: string
+                success:
+                    type: boolean
+                stale:
+                    type: boolean
+                error:
+                    type: string
+            description: |-
+                SportsLeagueSourceStatus reports whether a configured league was covered by
+                 the live/schedule aggregation attempt.
         worldmonitor_supply_chain_v1_GetShippingRatesRequest:
             type: object
         worldmonitor_supply_chain_v1_GetShippingRatesResponse:

@@ -430,7 +430,8 @@
     "consumerPrices": "Consumer Prices",
     "fearGreed": "Fear & Greed",
     "marketBreadth": "Market Breadth",
-    "climateNews": "Climate News"
+    "climateNews": "Climate News",
+    "sportsLive": "Sports Live"
   },
   "commands": {
     "prefixes": {
@@ -1288,7 +1289,8 @@
         "kindness": "Acts of Kindness",
         "happiness": "World Happiness",
         "speciesRecovery": "Species Recovery",
-        "renewableInstallations": "Clean Energy"
+        "renewableInstallations": "Clean Energy",
+        "sportsEvents": "Sports Events"
       },
       "tooltip": {
         "earthquake": "Earthquake",
@@ -2455,6 +2457,31 @@
         "compactHours": "{{count}}h",
         "compactDays": "{{count}}d"
       }
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>Sports Live</strong> Live scores, recently completed games, and upcoming fixtures from 20 major leagues around the world. Venue locations may use an approximate city center.",
+      "title": "Sports Live",
+      "empty": "No games match the selected filters",
+      "attribution": "Data provided by TheSportsDB",
+      "approximate": "Approximate location",
+      "filters": {
+        "all": "All",
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "final": "Final"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "live": "Live",
+        "final": "Final",
+        "postponed": "Postponed",
+        "cancelled": "Cancelled"
+      },
+      "errors": {
+        "unconfigured": "Sports data is not configured",
+        "failedToLoad": "Failed to load sports data"
+      },
+      "demoNotice": "DEMO · Free v1 data — not a guaranteed real-time feed"
     }
   },
   "popups": {

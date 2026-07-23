@@ -363,7 +363,8 @@
     "consumerPrices": "Prezzi al Consumo",
     "fearGreed": "Paura e Avidità",
     "marketBreadth": "Ampiezza di Mercato",
-    "climateNews": "Notizie Clima"
+    "climateNews": "Notizie Clima",
+    "sportsLive": "Sports Live"
   },
   "commands": {
     "prefixes": {
@@ -996,7 +997,8 @@
         "speciesRecovery": "Recupero delle specie",
         "renewableInstallations": "Energia pulita",
         "radiationSpike": "Picco di radiazione",
-        "radiationElevated": "Radiazione elevata"
+        "radiationElevated": "Radiazione elevata",
+        "sportsEvents": "Sports Events"
       },
       "layersTitle": "Livelli",
       "layerSearch": "Cerca livelli...",
@@ -2404,6 +2406,31 @@
         "compactHours": "{{count}}h",
         "compactDays": "{{count}}g"
       }
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>Sports Live</strong> Live scores, recently completed games, and upcoming fixtures from 20 major leagues around the world. Venue locations may use an approximate city center.",
+      "title": "Sports Live",
+      "empty": "No games match the selected filters",
+      "attribution": "Data provided by TheSportsDB",
+      "approximate": "Approximate location",
+      "filters": {
+        "all": "All",
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "final": "Final"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "live": "Live",
+        "final": "Final",
+        "postponed": "Postponed",
+        "cancelled": "Cancelled"
+      },
+      "errors": {
+        "unconfigured": "Sports data is not configured",
+        "failedToLoad": "Failed to load sports data"
+      },
+      "demoNotice": "DEMO · Free v1 data — not a guaranteed real-time feed"
     }
   },
   "popups": {

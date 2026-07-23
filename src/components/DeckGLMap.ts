@@ -37,7 +37,10 @@ import type {
   CyberThreat,
   CableHealthRecord,
   MilitaryBaseEnriched,
+  SportsEvent,
+  SportsEventCluster,
 } from '@/types';
+import { clusterSportsEvents } from './map/sports-event-clusters';
 import { fetchMilitaryBases, type MilitaryBaseCluster as ServerBaseCluster } from '@/services/military-bases';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import { fetchAircraftPositions } from '@/services/aviation';
@@ -586,6 +589,7 @@ export class DeckGLMap {
   private naturalEvents: NaturalEvent[] = [];
   private firmsFireData: Array<{ lat: number; lon: number; brightness: number; frp: number; confidence: number; region: string; acq_date: string; daynight: string }> = [];
   private techEvents: TechEventMarker[] = [];
+  private sportsEvents: SportsEvent[] = [];
   private flightDelays: AirportDelayAlert[] = [];
   private aircraftPositions: PositionSample[] = [];
   private aircraftFetchTimer: ReturnType<typeof setInterval> | null = null;
@@ -2028,6 +2032,10 @@ export class DeckGLMap {
     // Aircraft positions layer (live tracking, under flights toggle)
     if (mapLayers.flights && this.aircraftPositions.length > 0) {
       layers.push(this.createAircraftPositionsLayer());
+    }
+
+    if (mapLayers.sportsEvents && this.sportsEvents.length > 0) {
+      layers.push(this.createSportsEventsLayer());
     }
 
     // Protests layer (Supercluster-based deck.gl layers)
@@ -4628,6 +4636,23 @@ export class DeckGLMap {
     });
   }
 
+  private createSportsEventsLayer(): ScatterplotLayer<SportsEventCluster> {
+    return new ScatterplotLayer<SportsEventCluster>({
+      id: 'sports-events-layer',
+      data: clusterSportsEvents(this.sportsEvents),
+      getPosition: d => [d.longitude, d.latitude],
+      getRadius: d => Math.min(18, 7 + d.count * 2),
+      radiusUnits: 'pixels',
+      getFillColor: d => d.events.some(event => event.status === 'live')
+        ? [34, 197, 94, 220]
+        : [59, 130, 246, 205],
+      stroked: true,
+      getLineColor: [255, 255, 255, 220],
+      lineWidthMinPixels: 1.5,
+      pickable: true,
+    });
+  }
+
   private createImageryFootprintLayer(items: ImageryScene[]): PolygonLayer {
     return new PolygonLayer({
       id: 'satellite-imagery-layer',
@@ -4701,6 +4726,15 @@ export class DeckGLMap {
           return { html: `<div class="deckgl-tooltip"><strong>${text(ev?.title || '')}</strong><br/>${text(ev?.location || '')}</div>` };
         }
         return { html: `<div class="deckgl-tooltip"><strong>${t('components.deckgl.tooltip.techEventsCount', { count: String(obj.count) })}</strong><br/>${text(obj.location)}</div>` };
+      case 'sports-events-layer': {
+        const cluster = obj as SportsEventCluster;
+        const event = cluster.events[0];
+        if (!event) return null;
+        const label = cluster.count > 1
+          ? `${cluster.count} sports events`
+          : `${event.homeTeam} vs ${event.awayTeam}`;
+        return { html: `<div class="deckgl-tooltip"><strong>${text(label)}</strong><br/>${text(event.league)}</div>` };
+      }
       case 'datacenter-clusters-layer':
         if (obj.count === 1) {
           const dc = obj.items?.[0];
@@ -5140,6 +5174,19 @@ export class DeckGLMap {
 
     if (layerId === 'webcam-layer' && !('count' in info.object)) {
       this.showWebcamClickPopup(info.object as WebcamEntry, info.x, info.y);
+      return;
+    }
+
+    if (layerId === 'sports-events-layer') {
+      const cluster = info.object as SportsEventCluster;
+      const event = cluster.events[0];
+      if (!event) return;
+      this.popup.show({
+        type: cluster.count === 1 ? 'sportsEvent' : 'sportsEventCluster',
+        data: cluster.count === 1 ? event : cluster,
+        x: info.x,
+        y: info.y,
+      });
       return;
     }
 
@@ -6719,6 +6766,11 @@ export class DeckGLMap {
   public setTechEvents(events: TechEventMarker[]): void {
     this.techEvents = events;
     this.rebuildTechEventSupercluster();
+    this.render();
+  }
+
+  public setSportsEvents(events: SportsEvent[]): void {
+    this.sportsEvents = events;
     this.render();
   }
 

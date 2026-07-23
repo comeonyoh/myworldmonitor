@@ -163,6 +163,7 @@ const RPC_CACHE_TIER: Record<string, CacheTier> = {
   // 60s in-handler cache, absorbing identical-bbox requests at the CDN
   // before they hit this Vercel function. Energy Atlas live-tanker layer.
   '/api/maritime/v1/get-vessel-snapshot': 'live',
+  '/api/sports/v1/list-sports-events': 'live',
 
   '/api/market/v1/list-market-quotes': 'medium',
   '/api/market/v1/list-crypto-quotes': 'medium',

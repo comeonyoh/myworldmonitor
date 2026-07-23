@@ -33,6 +33,7 @@ export type DataSourceId =
   | 'gpsjam'
   | 'sanctions_pressure'
   | 'radiation'
+  | 'sports'
   | 'treasury_revenue';
 
 // AppContext lives in src/app/app-context.ts because it references
@@ -648,6 +649,7 @@ export interface MapLayers {
   datacenters: boolean;
   protests: boolean;
   flights: boolean;
+  sportsEvents: boolean;
   military: boolean;
   natural: boolean;
   spaceports: boolean;
@@ -705,6 +707,49 @@ export interface MapLayers {
   /** Live tanker positions (AIS ship type 80-89) inside chokepoint bboxes.
    *  Refreshed every 60s via getVesselSnapshot. Energy Atlas parity-push. */
   liveTankers?: boolean;
+}
+
+export type SportsEventStatus = 'scheduled' | 'live' | 'final' | 'postponed' | 'cancelled';
+export type SportsCoordinateAccuracy = 'exact' | 'approximate' | 'unknown';
+
+export interface SportsEvent {
+  id: string;
+  sport: string;
+  league: string;
+  status: SportsEventStatus;
+  startTime: string;
+  homeTeam: string;
+  awayTeam: string;
+  homeTeamLogo?: string;
+  awayTeamLogo?: string;
+  homeScore?: number | null;
+  awayScore?: number | null;
+  period?: string;
+  clock?: string;
+  venue?: string;
+  city?: string;
+  country?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  coordinateAccuracy?: SportsCoordinateAccuracy;
+  updatedAt: string;
+}
+
+export interface SportsLeagueSourceStatus {
+  league: string;
+  success: boolean;
+  stale?: boolean;
+  error?: string;
+}
+
+export interface SportsEventCluster {
+  id: string;
+  latitude: number;
+  longitude: number;
+  events: SportsEvent[];
+  count: number;
+  city?: string;
+  country?: string;
 }
 
 export interface AIDataCenter {

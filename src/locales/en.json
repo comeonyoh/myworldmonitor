@@ -326,6 +326,7 @@
   },
   "panels": {
     "liveNews": "Live News",
+    "sportsLive": "Sports Live",
     "markets": "Markets",
     "marketImplications": "AI Market Implications",
     "map": "Global Situation",
@@ -1266,6 +1267,7 @@
         "militaryActivity": "Military Activity",
         "shipTraffic": "Ship Traffic",
         "flightDelays": "Aviation",
+        "sportsEvents": "Sports Events",
         "protests": "Protests",
         "ucdpEvents": "Armed Conflict Events",
         "displacementFlows": "Displacement Flows",
@@ -2126,6 +2128,31 @@
       "errors": {
         "noData": "No outbreak data available",
         "failedToLoad": "Failed to load"
+      }
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>Sports Live Demo</strong> Free v1 schedule data from 20 major leagues. Scores and game states may be delayed or unavailable. Venue locations may use an approximate city center.",
+      "title": "Sports Live",
+      "empty": "No games match the selected filters",
+      "demoNotice": "DEMO · Free v1 data — not a guaranteed real-time feed",
+      "attribution": "Demo data provided by TheSportsDB Free API v1",
+      "approximate": "Approximate location",
+      "filters": {
+        "all": "All",
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "final": "Final"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "live": "Live",
+        "final": "Final",
+        "postponed": "Postponed",
+        "cancelled": "Cancelled"
+      },
+      "errors": {
+        "unconfigured": "Sports data is not configured",
+        "failedToLoad": "Failed to load sports data"
       }
     },
     "earningsCalendar": {

@@ -25,6 +25,7 @@ const FULL_PANELS: Record<string, PanelConfig> = {
   map: { name: 'Global Map', enabled: true, priority: 1 },
   'live-news': { name: 'Live News', enabled: true, priority: 1 },
   'live-webcams': { name: 'Live Webcams', enabled: true, priority: 1 },
+  'sports-live': { name: 'Sports Live', enabled: true, priority: 1 },
   'windy-webcams': { name: 'Windy Live Webcam', enabled: false, priority: 2 },
   insights: { name: 'AI Insights', enabled: true, priority: 1 },
   'threat-timeline': { name: 'Threat Timeline', enabled: true, priority: 1 },
@@ -175,6 +176,7 @@ const FULL_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -240,6 +242,7 @@ const FULL_MOBILE_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -348,6 +351,7 @@ const TECH_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -410,6 +414,7 @@ const TECH_MOBILE_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -547,6 +552,7 @@ const FINANCE_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -609,6 +615,7 @@ const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -687,6 +694,7 @@ const HAPPY_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: true,
   kindness: true,
   happiness: true,
@@ -749,6 +757,7 @@ const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
   commodityHubs: false,
   gulfInvestments: false,
   // Happy variant layers
+  sportsEvents: false,
   positiveEvents: true,
   kindness: true,
   happiness: true,
@@ -854,6 +863,7 @@ const COMMODITY_MAP_LAYERS: MapLayers = {
   commodityHubs: true,
   gulfInvestments: false,
   // Happy variant layers (disabled)
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -916,6 +926,7 @@ const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
   commodityHubs: true,
   gulfInvestments: false,
   // Happy variant layers (disabled)
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -1016,6 +1027,7 @@ const ENERGY_MAP_LAYERS: MapLayers = {
   commodityHubs: true,
   gulfInvestments: false,
   // Happy variant layers (disabled)
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -1075,6 +1087,7 @@ const ENERGY_MOBILE_MAP_LAYERS: MapLayers = {
   centralBanks: false,
   commodityHubs: false,
   gulfInvestments: false,
+  sportsEvents: false,
   positiveEvents: false,
   kindness: false,
   happiness: false,
@@ -1331,6 +1344,7 @@ export const LAYER_TO_SOURCE: Partial<Record<keyof MapLayers, DataSourceId[]>> =
   climate: ['climate'],
   sanctions: ['sanctions_pressure'],
   radiationWatch: ['radiation'],
+  sportsEvents: ['sports'],
 };
 
 // ============================================
@@ -1374,7 +1388,7 @@ export const PANEL_CATEGORY_MAP: Record<string, { labelKey: string; panelKeys: s
   },
   dataTracking: {
     labelKey: 'header.panelCatDataTracking',
-    panelKeys: ['monitors', 'satellite-fires', 'ucdp-events', 'displacement', 'climate', 'climate-news', 'population-exposure', 'security-advisories', 'radiation-watch', 'oref-sirens', 'world-clock', 'tech-readiness', 'disease-outbreaks', 'fao-food-price-index', 'grocery-basket', 'defense-patents'],
+    panelKeys: ['monitors', 'sports-live', 'satellite-fires', 'ucdp-events', 'displacement', 'climate', 'climate-news', 'population-exposure', 'security-advisories', 'radiation-watch', 'oref-sirens', 'world-clock', 'tech-readiness', 'disease-outbreaks', 'fao-food-price-index', 'grocery-basket', 'defense-patents'],
     variants: ['full', 'energy'],
   },
 

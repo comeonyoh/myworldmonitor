@@ -23,6 +23,7 @@ import type { ResilienceServiceClient as ResilienceServiceClientInstance } from 
 import type { SanctionsServiceClient as SanctionsServiceClientInstance } from '@/generated/client/worldmonitor/sanctions/v1/service_client';
 import type { ScenarioServiceClient as ScenarioServiceClientInstance } from '@/generated/client/worldmonitor/scenario/v1/service_client';
 import type { SeismologyServiceClient as SeismologyServiceClientInstance } from '@/generated/client/worldmonitor/seismology/v1/service_client';
+import type { SportsServiceClient as SportsServiceClientInstance } from '@/generated/client/worldmonitor/sports/v1/service_client';
 import type { SupplyChainServiceClient as SupplyChainServiceClientInstance } from '@/generated/client/worldmonitor/supply_chain/v1/service_client';
 import type { ThermalServiceClient as ThermalServiceClientInstance } from '@/generated/client/worldmonitor/thermal/v1/service_client';
 import type { TradeServiceClient as TradeServiceClientInstance } from '@/generated/client/worldmonitor/trade/v1/service_client';
@@ -190,6 +191,11 @@ export const SeismologyServiceClient = createLazyRpcClientConstructor<Seismology
 export const SupplyChainServiceClient = createLazyRpcClientConstructor<SupplyChainServiceClientInstance>(async () => {
   const module = await import('@/generated/client/worldmonitor/supply_chain/v1/service_client');
   return module.SupplyChainServiceClient;
+});
+
+export const SportsServiceClient = createLazyRpcClientConstructor<SportsServiceClientInstance>(async () => {
+  const module = await import('@/generated/client/worldmonitor/sports/v1/service_client');
+  return module.SportsServiceClient;
 });
 
 export const ThermalServiceClient = createLazyRpcClientConstructor<ThermalServiceClientInstance>(async () => {

@@ -163,6 +163,7 @@ export const DEFERRED_PANEL_NATURAL_FOOTPRINTS: Readonly<Record<string, Deferred
   'internet-disruptions': { rowSpan: 2 },
   'live-news': { className: 'panel-wide' },
   'live-webcams': { className: 'panel-wide' },
+  'sports-live': { rowSpan: 2 },
   'oil-inventories': { rowSpan: 2 },
   'pipeline-status': { rowSpan: 2 },
   'sanctions-pressure': { rowSpan: 2 },
@@ -1766,6 +1767,16 @@ export class PanelLayoutManager implements AppModule {
       this.importPanel('energy-risk-overview', () => import('@/components/EnergyRiskOverviewPanel'), 'EnergyRiskOverviewPanel', (EnergyRiskOverviewPanel) => new EnergyRiskOverviewPanel()),
     );
     this.lazyDefaultPanel('polymarket', () => import('@/components/PredictionPanel'), 'PredictionPanel');
+    this.lazyImportedPanel('sports-live', () => import('@/components/SportsLivePanel'), 'SportsLivePanel', (SportsLivePanel) => {
+      const panel = new SportsLivePanel();
+      panel.setEventClickHandler((event) => {
+        if (event.latitude == null || event.longitude == null) return;
+        this.ctx.mapLayers.sportsEvents = true;
+        this.ctx.map?.enableLayer('sportsEvents');
+        this.ctx.map?.setCenter(event.latitude, event.longitude, 8);
+      });
+      return panel;
+    });
 
     this.createNewsPanel('gov', 'panels.gov');
     this.createNewsPanel('intel', 'panels.intel');

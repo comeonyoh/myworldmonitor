@@ -42,7 +42,8 @@ import { getCountryBbox, getCountriesGeoJson, getCountryAtCoordinates, getCountr
 import { escapeHtml } from '@/utils/sanitize';
 import { showLayerWarning } from '@/utils/layer-warning';
 import type { FeatureCollection, Geometry } from 'geojson';
-import type { MapLayers, Hotspot, MilitaryFlight, MilitaryVessel, MilitaryVesselCluster, NaturalEvent, InternetOutage, CyberThreat, SocialUnrestEvent, UcdpGeoEvent, MilitaryBase, GammaIrradiator, Spaceport, EconomicCenter, StrategicWaterway, CriticalMineralProject, AIDataCenter, UnderseaCable, Pipeline, CableAdvisory, RepairShip, AisDisruptionEvent, AisDensityZone, AisDisruptionType } from '@/types';
+import type { MapLayers, Hotspot, MilitaryFlight, MilitaryVessel, MilitaryVesselCluster, NaturalEvent, InternetOutage, CyberThreat, SocialUnrestEvent, UcdpGeoEvent, MilitaryBase, GammaIrradiator, Spaceport, EconomicCenter, StrategicWaterway, CriticalMineralProject, AIDataCenter, UnderseaCable, Pipeline, CableAdvisory, RepairShip, AisDisruptionEvent, AisDensityZone, AisDisruptionType, SportsEvent, SportsEventCluster } from '@/types';
+import { clusterSportsEvents } from './map/sports-event-clusters';
 import type { Earthquake } from '@/services/earthquakes';
 import type { AirportDelayAlert } from '@/services/aviation';
 import { MapPopup } from './MapPopup';
@@ -417,6 +418,10 @@ interface WebcamClusterData extends BaseMarker {
   count: number;
   categories: string[];
 }
+interface SportsMarker extends BaseMarker {
+  _kind: 'sports';
+  cluster: SportsEventCluster;
+}
 interface GlobePath {
   id: string;
   name: string;
@@ -452,7 +457,7 @@ type GlobeMarker =
   | EarthquakeMarker | RadiationMarker | EconomicMarker | DatacenterMarker | WaterwayMarker | MineralMarker
   | FlightDelayMarker | NotamRingMarker | CableAdvisoryMarker | RepairShipMarker | AisDisruptionMarker
   | NewsLocationMarker | FlashMarker | SatelliteMarker | SatFootprintMarker | ImagerySceneMarker
-  | WebcamMarkerData | WebcamClusterData;
+  | WebcamMarkerData | WebcamClusterData | SportsMarker;
 
 interface GlobeControlsLike {
   autoRotate: boolean;
@@ -527,6 +532,7 @@ export class GlobeMap {
   private climateMarkers: ClimateMarker[] = [];
   private gpsJamMarkers: GpsJamMarker[] = [];
   private techMarkers: TechMarker[] = [];
+  private sportsMarkers: SportsMarker[] = [];
   private conflictZoneMarkers: ConflictZoneMarker[] = [];
   private milBaseMarkers: MilBaseMarker[] = [];
   private milBaseMarkersLoadPending = false;
@@ -1078,6 +1084,17 @@ export class GlobeMap {
       const c = severityColors[d.severity] ?? '#88aaff';
       setTrustedHtml(el, trustedHtml(GlobeMap.wrapHit(`<div style="font-size:9px;color:${c};text-shadow:0 0 4px ${c}88;font-weight:bold;">⚡</div>`), "legacy direct innerHTML migration"));
       el.title = d.headline;
+    } else if (d._kind === 'sports') {
+      const live = d.cluster.events.some(event => event.status === 'live');
+      const color = live ? '#22c55e' : '#3b82f6';
+      const label = d.cluster.count > 1 ? String(d.cluster.count) : '🏆';
+      setTrustedHtml(el, trustedHtml(GlobeMap.wrapHit(
+        `<div style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:${color};border:1.5px solid #fff;color:#fff;font-size:10px;font-weight:700;box-shadow:0 0 8px ${color};">${label}</div>`
+      ), "sports event marker"));
+      const event = d.cluster.events[0];
+      el.title = d.cluster.count > 1
+        ? `${d.cluster.count} sports events`
+        : event ? `${event.homeTeam} vs ${event.awayTeam}` : 'Sports event';
     } else if (d._kind === 'radiation') {
       const c = d.severity === 'spike' ? '#ff3030' : '#ffaa00';
       const ring = d.severity === 'spike'
@@ -1344,6 +1361,20 @@ export class GlobeMap {
       const pov = this.globe.pointOfView();
       // Fly to cluster and zoom in (reduce altitude by 60%)
       this.globe.pointOfView({ lat: d._lat, lng: d._lng, altitude: pov.altitude * 0.4 }, 800);
+    }
+    if (d._kind === 'sports' && this.popup) {
+      const aRect = anchor.getBoundingClientRect();
+      const cRect = this.container.getBoundingClientRect();
+      const event = d.cluster.events[0];
+      if (!event) return;
+      this.hideTooltip();
+      this.popup.show({
+        type: d.cluster.count === 1 ? 'sportsEvent' : 'sportsEventCluster',
+        data: d.cluster.count === 1 ? event : d.cluster,
+        x: aRect.left - cRect.left + aRect.width / 2,
+        y: aRect.top - cRect.top,
+      });
+      return;
     }
     if (d._kind === 'radiation' && this.popup) {
       const aRect = anchor.getBoundingClientRect();
@@ -2138,6 +2169,7 @@ export class GlobeMap {
     if (this.layers.ucdpEvents) markers.push(...this.ucdpMarkers);
     if (this.layers.displacement) markers.push(...this.displacementMarkers);
     if (this.layers.climate) markers.push(...this.climateMarkers);
+    if (this.layers.sportsEvents) markers.push(...this.sportsMarkers);
     if (this.layers.gpsJamming) markers.push(...this.gpsJamMarkers);
     if (this.layers.satellites) {
       markers.push(...this.satelliteMarkers);
@@ -3506,6 +3538,15 @@ export class GlobeMap {
       title: e.title ?? '',
       country: e.country ?? '',
       daysUntil: e.daysUntil ?? 0,
+    }));
+    this.flushMarkers();
+  }
+  public setSportsEvents(events: SportsEvent[]): void {
+    this.sportsMarkers = clusterSportsEvents(events).map(cluster => ({
+      _kind: 'sports' as const,
+      _lat: cluster.latitude,
+      _lng: cluster.longitude,
+      cluster,
     }));
     this.flushMarkers();
   }

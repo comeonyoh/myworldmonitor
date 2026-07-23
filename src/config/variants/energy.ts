@@ -78,6 +78,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   displacement: false,
   protests: false,
   flights: false,
+  sportsEvents: false,
   cables: false,
   datacenters: false,
   // Tech variant layers
@@ -143,6 +144,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   displacement: false,
   protests: false,
   flights: false,
+  sportsEvents: false,
   cables: false,
   datacenters: false,
   startupHubs: false,

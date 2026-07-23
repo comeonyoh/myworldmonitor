@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package worldmonitor.sports.v1;
+
+import "sebuf/http/annotations.proto";
+import "worldmonitor/sports/v1/list_sports_events.proto";
+
+service SportsService {
+  option (sebuf.http.service_config) = {base_path: "/api/sports/v1"};
+
+  rpc ListSportsEvents(ListSportsEventsRequest) returns (ListSportsEventsResponse) {
+    option (sebuf.http.config) = {path: "/list-sports-events", method: HTTP_METHOD_GET};
+  }
+}

@@ -103,6 +103,7 @@ export const BOOTSTRAP_CACHE_KEYS = Object.freeze({
   wsbTickers: 'intelligence:wsb-tickers:v1',
   pizzint: 'intelligence:pizzint:seed:v1',
   diseaseOutbreaks: 'health:disease-outbreaks:v1',
+  sportsEvents: 'sports:events-bootstrap:v1',
   economicStress: 'economic:stress-index:v1',
   electricityPrices: 'energy:electricity:v1:index',
   jodiOil: 'energy:jodi-oil:v1:_countries',
@@ -168,6 +169,7 @@ const FAST_KEY_NAMES = new Set([
   'marketQuotes', 'commodityQuotes', 'positiveGeoEvents', 'riskScores', 'flightDelays', 'insights', 'predictions',
   'iranEvents', 'temporalAnomalies', 'weatherAlerts', 'spending', 'theaterPosture', 'gdeltIntel',
   'correlationCards', 'forecasts', 'shippingRates', 'shippingStress', 'socialVelocity', 'wsbTickers',
+  'sportsEvents',
 ]);
 
 const ON_DEMAND_KEY_NAMES = new Set([

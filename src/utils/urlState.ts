@@ -19,6 +19,7 @@ const LAYER_KEYS: (keyof MapLayers)[] = [
   'datacenters',
   'protests',
   'flights',
+  'sportsEvents',
   'military',
   'natural',
   'spaceports',

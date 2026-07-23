@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package worldmonitor.sports.v1;
+
+// ListSportsEventsRequest is intentionally empty. The server owns the fixed
+// worldwide league allowlist and returns a compact dashboard snapshot.
+message ListSportsEventsRequest {}
+
+// SportsTeam is a lightweight team reference suitable for live-score cards.
+message SportsTeam {
+  string id = 1;
+  string name = 2;
+  string logo_url = 3;
+}
+
+// SportsEvent is a normalized event from TheSportsDB.
+message SportsEvent {
+  string id = 1;
+  string sport = 2;
+  string league_id = 3;
+  string league = 4;
+  // One of "scheduled", "live", "final", "postponed", or "cancelled".
+  string status = 5;
+  // UTC ISO-8601 timestamp.
+  string start_time = 6;
+  SportsTeam home_team = 7;
+  SportsTeam away_team = 8;
+  optional int32 home_score = 9;
+  optional int32 away_score = 10;
+  string period = 11;
+  string clock = 12;
+  string venue = 13;
+  string city = 14;
+  string country = 15;
+  optional double latitude = 16;
+  optional double longitude = 17;
+  // "exact", "approximate", or empty when the event is not mappable.
+  string coordinate_accuracy = 18;
+  string updated_at = 19;
+}
+
+// SportsLeagueSourceStatus reports whether a configured league was covered by
+// the live/schedule aggregation attempt.
+message SportsLeagueSourceStatus {
+  string league = 1;
+  bool success = 2;
+  bool stale = 3;
+  string error = 4;
+}
+
+message ListSportsEventsResponse {
+  repeated SportsEvent events = 1;
+  string fetched_at = 2;
+  bool configured = 3;
+  repeated SportsLeagueSourceStatus league_statuses = 4;
+  bool degraded = 5;
+  bool stale = 6;
+  string error = 7;
+}

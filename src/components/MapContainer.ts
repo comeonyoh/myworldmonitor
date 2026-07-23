@@ -29,6 +29,7 @@ import type {
   UcdpGeoEvent,
   CyberThreat,
   CableHealthRecord,
+  SportsEvent,
 } from '@/types';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { DisplacementFlow } from '@/services/displacement';
@@ -183,6 +184,7 @@ export class MapContainer {
   private cachedNaturalEvents: NaturalEvent[] | null = null;
   private cachedFires: FireMarker[] | null = null;
   private cachedTechEvents: TechEventMarker[] | null = null;
+  private cachedSportsEvents: SportsEvent[] | null = null;
   private cachedUcdpEvents: UcdpGeoEvent[] | null = null;
   private cachedDisplacementFlows: DisplacementFlow[] | null = null;
   private cachedClimateAnomalies: ClimateAnomaly[] | null = null;
@@ -640,6 +642,7 @@ export class MapContainer {
     if (this.cachedNaturalEvents) this.setNaturalEvents(this.cachedNaturalEvents);
     if (this.cachedFires) this.setFires(this.cachedFires);
     if (this.cachedTechEvents) this.setTechEvents(this.cachedTechEvents);
+    if (this.cachedSportsEvents) this.setSportsEvents(this.cachedSportsEvents);
     if (this.cachedUcdpEvents) this.setUcdpEvents(this.cachedUcdpEvents);
     if (this.cachedDisplacementFlows) this.setDisplacementFlows(this.cachedDisplacementFlows);
     if (this.cachedClimateAnomalies) this.setClimateAnomalies(this.cachedClimateAnomalies);
@@ -964,6 +967,13 @@ export class MapContainer {
     } else {
       this.svgMap?.setTechEvents(events);
     }
+  }
+
+  public setSportsEvents(events: SportsEvent[]): void {
+    this.cachedSportsEvents = events;
+    if (this.useGlobe) { this.globeMap?.setSportsEvents(events); return; }
+    if (this.useDeckGL) this.deckGLMap?.setSportsEvents(events);
+    else this.svgMap?.setSportsEvents(events);
   }
 
   public setUcdpEvents(events: UcdpGeoEvent[]): void {

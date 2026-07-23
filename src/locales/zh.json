@@ -361,7 +361,8 @@
     "airlineIntel": "✈️ 航空公司情报",
     "consumerPrices": "消费者价格",
     "marketBreadth": "市场广度",
-    "climateNews": "气候新闻"
+    "climateNews": "气候新闻",
+    "sportsLive": "Sports Live"
   },
   "commands": {
     "prefixes": {
@@ -1147,7 +1148,8 @@
         "speciesRecovery": "物种恢复",
         "renewableInstallations": "清洁能源",
         "radiationSpike": "辐射峰值",
-        "radiationElevated": "辐射升高"
+        "radiationElevated": "辐射升高",
+        "sportsEvents": "Sports Events"
       },
       "tooltip": {
         "earthquake": "地震",
@@ -2386,6 +2388,31 @@
         "compactHours": "{{count}}h",
         "compactDays": "{{count}}d"
       }
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>Sports Live</strong> Live scores, recently completed games, and upcoming fixtures from 20 major leagues around the world. Venue locations may use an approximate city center.",
+      "title": "Sports Live",
+      "empty": "No games match the selected filters",
+      "attribution": "Data provided by TheSportsDB",
+      "approximate": "Approximate location",
+      "filters": {
+        "all": "All",
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "final": "Final"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "live": "Live",
+        "final": "Final",
+        "postponed": "Postponed",
+        "cancelled": "Cancelled"
+      },
+      "errors": {
+        "unconfigured": "Sports data is not configured",
+        "failedToLoad": "Failed to load sports data"
+      },
+      "demoNotice": "DEMO · Free v1 data — not a guaranteed real-time feed"
     }
   },
   "popups": {

@@ -154,6 +154,7 @@ const layers = {
   commodityPorts: false,
   webcams: false,
   diseaseOutbreaks: false,
+  sportsEvents: false,
 };
 
 await initI18n();

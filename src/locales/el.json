@@ -361,7 +361,8 @@
     "consumerPrices": "Τιμές Καταναλωτή",
     "fearGreed": "Fear & Greed",
     "marketBreadth": "Market Breadth",
-    "climateNews": "Ειδήσεις για το Κλίμα"
+    "climateNews": "Ειδήσεις για το Κλίμα",
+    "sportsLive": "Sports Live"
   },
   "commands": {
     "prefixes": {
@@ -1147,7 +1148,8 @@
         "speciesRecovery": "Ανάκαμψη ειδών",
         "renewableInstallations": "Καθαρή ενέργεια",
         "radiationSpike": "Αιχμή ραδιενέργειας",
-        "radiationElevated": "Αυξημένη ραδιενέργεια"
+        "radiationElevated": "Αυξημένη ραδιενέργεια",
+        "sportsEvents": "Sports Events"
       },
       "tooltip": {
         "earthquake": "Σεισμός",
@@ -2386,6 +2388,31 @@
         "compactHours": "{{count}}h",
         "compactDays": "{{count}}d"
       }
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>Sports Live</strong> Live scores, recently completed games, and upcoming fixtures from 20 major leagues around the world. Venue locations may use an approximate city center.",
+      "title": "Sports Live",
+      "empty": "No games match the selected filters",
+      "attribution": "Data provided by TheSportsDB",
+      "approximate": "Approximate location",
+      "filters": {
+        "all": "All",
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "final": "Final"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "live": "Live",
+        "final": "Final",
+        "postponed": "Postponed",
+        "cancelled": "Cancelled"
+      },
+      "errors": {
+        "unconfigured": "Sports data is not configured",
+        "failedToLoad": "Failed to load sports data"
+      },
+      "demoNotice": "DEMO · Free v1 data — not a guaranteed real-time feed"
     }
   },
   "popups": {
