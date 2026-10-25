@@ -101,6 +101,7 @@ export function createBlankMapLayers(): MapLayers {
     datacenters: false,
     protests: false,
     flights: false,
+    sportsEvents: false,
     military: false,
     natural: false,
     spaceports: false,

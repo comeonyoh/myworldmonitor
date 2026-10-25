@@ -363,7 +363,8 @@
     "consumerPrices": "Prețuri pentru consumatori",
     "fearGreed": "Frică și lacómie",
     "marketBreadth": "Amploarea pieței",
-    "climateNews": "Știri despre climă"
+    "climateNews": "Știri despre climă",
+    "sportsLive": "Sports Live"
   },
   "commands": {
     "prefixes": {
@@ -1149,7 +1150,8 @@
         "speciesRecovery": "Recuperarea speciilor",
         "renewableInstallations": "Energie curată",
         "radiationSpike": "Vârf de radiații",
-        "radiationElevated": "Radiații ridicate"
+        "radiationElevated": "Radiații ridicate",
+        "sportsEvents": "Sports Events"
       },
       "tooltip": {
         "earthquake": "Cutremur",
@@ -2404,6 +2406,31 @@
         "compactHours": "{{count}}h",
         "compactDays": "{{count}}d"
       }
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>Sports Live</strong> Live scores, recently completed games, and upcoming fixtures from 20 major leagues around the world. Venue locations may use an approximate city center.",
+      "title": "Sports Live",
+      "empty": "No games match the selected filters",
+      "attribution": "Data provided by TheSportsDB",
+      "approximate": "Approximate location",
+      "filters": {
+        "all": "All",
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "final": "Final"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "live": "Live",
+        "final": "Final",
+        "postponed": "Postponed",
+        "cancelled": "Cancelled"
+      },
+      "errors": {
+        "unconfigured": "Sports data is not configured",
+        "failedToLoad": "Failed to load sports data"
+      },
+      "demoNotice": "DEMO · Free v1 data — not a guaranteed real-time feed"
     }
   },
   "popups": {

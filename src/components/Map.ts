@@ -4,7 +4,8 @@ import { escapeHtml } from '@/utils/sanitize';
 import { getCSSColor } from '@/utils';
 import type { Topology, GeometryCollection } from 'topojson-specification';
 import type { Feature, Geometry } from 'geojson';
-import type { MapLayers, Hotspot, NewsItem, InternetOutage, RelatedAsset, AssetType, AisDisruptionEvent, AisDensityZone, CableAdvisory, RepairShip, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, CyberThreat, CableHealthRecord, MilitaryBase } from '@/types';
+import type { MapLayers, Hotspot, NewsItem, InternetOutage, RelatedAsset, AssetType, AisDisruptionEvent, AisDensityZone, CableAdvisory, RepairShip, SocialUnrestEvent, MilitaryFlight, MilitaryVessel, MilitaryFlightCluster, MilitaryVesselCluster, NaturalEvent, CyberThreat, CableHealthRecord, MilitaryBase, SportsEvent } from '@/types';
+import { clusterSportsEvents } from './map/sports-event-clusters';
 import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { Earthquake } from '@/services/earthquakes';
 import { type IranEvent, getIranEventCssColor, getIranEventSize } from '@/services/conflict';
@@ -173,6 +174,7 @@ export class MapComponent {
   private naturalEvents: NaturalEvent[] = [];
   private firmsFireData: Array<{ lat: number; lon: number; brightness: number; frp: number; confidence: number; region: string; acq_date: string; daynight: string }> = [];
   private techEvents: TechEventMarker[] = [];
+  private sportsEvents: SportsEvent[] = [];
   private techActivities: TechHubActivity[] = [];
   private geoActivities: GeoHubActivity[] = [];
   private iranEvents: IranEvent[] = [];
@@ -1833,6 +1835,35 @@ export class MapComponent {
           this.onHotspotClick?.(spot);
         });
 
+        this.appendOverlay(div);
+      });
+    }
+
+    if (this.state.layers.sportsEvents) {
+      clusterSportsEvents(this.sportsEvents).forEach((cluster) => {
+        const pos = projection([cluster.longitude, cluster.latitude]);
+        if (!pos) return;
+        const first = cluster.events[0];
+        if (!first) return;
+        const div = document.createElement('button');
+        div.type = 'button';
+        div.className = `sports-event-marker${first.status === 'live' ? ' live' : ''}${cluster.count > 1 ? ' cluster' : ''}`;
+        div.style.left = `${pos[0]}px`;
+        div.style.top = `${pos[1]}px`;
+        div.textContent = cluster.count > 1 ? String(cluster.count) : '🏆';
+        div.title = cluster.count > 1
+          ? `${cluster.count} sports events`
+          : `${first.homeTeam} vs ${first.awayTeam}`;
+        div.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const rect = this.container.getBoundingClientRect();
+          this.popup.show({
+            type: cluster.count === 1 ? 'sportsEvent' : 'sportsEventCluster',
+            data: cluster.count === 1 ? first : cluster,
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+          });
+        });
         this.appendOverlay(div);
       });
     }
@@ -4389,6 +4420,11 @@ export class MapComponent {
 
   public setTechEvents(events: TechEventMarker[]): void {
     this.techEvents = events;
+    this.render();
+  }
+
+  public setSportsEvents(events: SportsEvent[]): void {
+    this.sportsEvents = events;
     this.render();
   }
 

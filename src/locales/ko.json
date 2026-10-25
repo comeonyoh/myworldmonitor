@@ -257,6 +257,7 @@
   },
   "panels": {
     "liveNews": "실시간 뉴스",
+    "sportsLive": "스포츠 라이브",
     "markets": "시장",
     "map": "글로벌 상황",
     "techMap": "글로벌 기술",
@@ -1123,6 +1124,7 @@
         "militaryActivity": "군사 활동",
         "shipTraffic": "선박 교통",
         "flightDelays": "항공 지연",
+        "sportsEvents": "스포츠 경기",
         "protests": "시위",
         "ucdpEvents": "UCDP 사건",
         "displacementFlows": "난민 이동",
@@ -1932,6 +1934,31 @@
         "failedToLoad": "로드 실패"
       },
       "methodologyNote": "Alert / Warning / Watch 수준은 편집 키워드 분류기에서 제공 — 키워드 표 및 제한사항은 /docs/methodology/disease-alert-level 참조"
+    },
+    "sportsLive": {
+      "infoTooltip": "<strong>스포츠 라이브 데모</strong> 전 세계 주요 20개 리그의 무료 v1 일정 데이터입니다. 점수와 경기 상태가 지연되거나 제공되지 않을 수 있으며, 위치는 도시 중심점으로 근사될 수 있습니다.",
+      "title": "스포츠 라이브",
+      "empty": "선택한 필터와 일치하는 경기가 없습니다",
+      "demoNotice": "데모 · 무료 v1 데이터 — 실시간 제공을 보장하지 않습니다",
+      "attribution": "TheSportsDB 무료 API v1 제공 데모 데이터",
+      "approximate": "대략적인 위치",
+      "filters": {
+        "all": "전체",
+        "live": "라이브",
+        "upcoming": "예정",
+        "final": "종료"
+      },
+      "status": {
+        "scheduled": "예정",
+        "live": "라이브",
+        "final": "종료",
+        "postponed": "연기",
+        "cancelled": "취소"
+      },
+      "errors": {
+        "unconfigured": "스포츠 데이터가 설정되지 않았습니다",
+        "failedToLoad": "스포츠 데이터를 불러오지 못했습니다"
+      }
     },
     "earningsCalendar": {
       "infoTooltip": "<strong>실적 캘린더</strong> 주요 상장 기업의 예정 및 최근 실적 발표. EPS 추정치 대 실적, 매출, 상회/하회 분류를 표시. 출처: 금융 데이터 제공업체.",

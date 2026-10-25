@@ -116,6 +116,7 @@ const SOURCE_METADATA: Record<DataSourceId, { name: string; requiredForRisk: boo
   radiation: { name: 'Radiation Watch', requiredForRisk: false, panelId: 'radiation-watch' },
   gpsjam: { name: 'GPS/GNSS Interference', requiredForRisk: false, panelId: 'map' },
   treasury_revenue: { name: 'Treasury Customs Revenue', requiredForRisk: false, panelId: 'trade-policy' },
+  sports: { name: 'TheSportsDB Live Events', requiredForRisk: false, panelId: 'sports-live' },
 };
 
 const PANEL_FRESHNESS_SOURCES: Record<string, readonly DataSourceId[]> = {
@@ -142,6 +143,7 @@ const PANEL_FRESHNESS_SOURCES: Record<string, readonly DataSourceId[]> = {
   military: ['opensky', 'wingbits'],
   shipping: ['ais'],
   natural: ['usgs'],
+  'sports-live': ['sports'],
 };
 
 const STATUS_SEVERITY: Record<FreshnessStatus, number> = {
@@ -539,6 +541,7 @@ const INTELLIGENCE_GAP_MESSAGES: Record<DataSourceId, string> = {
   acled: 'Protest/conflict events may be missed—ACLED data unavailable',
   opensky: 'Military aircraft positions unknown—flight tracking offline',
   wingbits: 'Aircraft identification limited—enrichment service unavailable',
+  sports: 'Live sports scores and schedules may be unavailable—sports feed offline',
   ais: 'Vessel positions outdated—possible dark shipping or AIS transponder-off activity undetected',
   usgs: 'Recent earthquakes may not be shown—seismic data unavailable',
   gdelt: 'News event velocity unknown—GDELT intelligence feed offline',

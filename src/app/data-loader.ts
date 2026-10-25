@@ -95,6 +95,7 @@ import { fetchClimateAnomalies } from '@/services/climate';
 import { fetchSecurityAdvisories } from '@/services/security-advisories';
 import { fetchThermalEscalations } from '@/services/thermal-escalation';
 import { fetchCrossSourceSignals } from '@/services/cross-source-signals';
+import { fetchSportsEvents } from '@/services/sports';
 import { fetchTelegramFeed } from '@/services/telegram-intel';
 import { fetchOrefAlerts, startOrefPolling, stopOrefPolling, onOrefAlertsUpdate } from '@/services/oref-alerts';
 import { getResilienceRanking } from '@/services/resilience';
@@ -145,6 +146,7 @@ import type { WsbTickerScannerPanel } from '@/components/WsbTickerScannerPanel';
 import type { AAIISentimentPanel } from '@/components/AAIISentimentPanel';
 import type { MarketBreadthPanel } from '@/components/MarketBreadthPanel';
 import type { SatelliteFiresPanel } from '@/components/SatelliteFiresPanel';
+import type { SportsLivePanel } from '@/components/SportsLivePanel';
 import { classifyNewsItem } from '@/services/positive-classifier';
 import { fetchGivingSummary } from '@/services/giving';
 import { fetchProgressData } from '@/services/progress-data';
@@ -785,6 +787,9 @@ export class DataLoaderManager implements AppModule {
       if (shouldLoad('energy-complex')) {
         tasks.push({ name: 'oil', task: () => runGuarded('oil', () => this.loadOilAnalytics()) });
       }
+      if (SITE_VARIANT === 'full' && (shouldLoad('sports-live') || this.ctx.mapLayers.sportsEvents)) {
+        tasks.push({ name: 'sportsEvents', task: () => runGuarded('sportsEvents', () => this.loadSportsEvents()) });
+      }
 
       // Trade policy + supply-chain data (FULL, FINANCE, COMMODITY, ENERGY variants use supply-chain surface)
       if (SITE_VARIANT === 'full' || SITE_VARIANT === 'finance' || SITE_VARIANT === 'commodity' || SITE_VARIANT === 'energy') {
@@ -1006,6 +1011,9 @@ export class DataLoaderManager implements AppModule {
         case 'radiationWatch':
           await this.loadRadiationWatch();
           break;
+        case 'sportsEvents':
+          await this.loadSportsEvents();
+          break;
         case 'ucdpEvents':
         case 'displacement':
         case 'climate':
@@ -1022,6 +1030,30 @@ export class DataLoaderManager implements AppModule {
     } finally {
       this.ctx.inFlight.delete(layer);
       this.ctx.map?.setLayerLoading(layer, false);
+    }
+  }
+
+  async loadSportsEvents(): Promise<void> {
+    try {
+      const result = await fetchSportsEvents();
+      this.callPanel('sports-live', 'setData', result);
+      // Always prime MapContainer's replay cache. The renderer only draws the
+      // data while the layer is enabled, and panel clicks can enable the layer
+      // without requiring a second network round trip.
+      this.ctx.map?.setSportsEvents(result.events);
+      if (!result.configured) {
+        dataFreshness.recordError('sports', 'Sports provider is not configured');
+      } else if (result.events.length > 0) {
+        dataFreshness.recordUpdate('sports', result.events.length);
+      } else if (result.error) {
+        dataFreshness.recordError('sports', result.error);
+      }
+    } catch (error) {
+      console.error('[Sports] Sports events fetch failed:', error);
+      dataFreshness.recordError('sports', String(error));
+      if (!(this.ctx.panels['sports-live'] as SportsLivePanel | undefined)?.hasData()) {
+        this.callPanel('sports-live', 'showError', t('components.sportsLive.errors.failedToLoad'));
+      }
     }
   }
 
